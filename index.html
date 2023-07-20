@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Checkers Online</title>
+    <meta charset = "UTF-8">
+    <meta name = "viewport" content = "width = device-width, initial-scale = 1">
+    <script type="application/javascript" src="/socket.io/socket.io.js"></script>
+    <link rel =  "stylesheet" href = "checkersM.css">
+</head>
+
+<body>
+    
+    <div class = 'mainContainer'>
+
+        <div id="boardContainer"> 
+            
+        </div>
+
+
+        <div class = 'winnerBoard'>
+            <h3 id = 'winnerBoard'></h3>
+        </div>  
+
+
+        <div id = "userInterface">
+            <div id = "createAccountUI">
+                <form id = 'userCreate'>
+                    <input type = "text" id = "name" name = "name" >
+                    <input type = "submit" id = "createUser" value = "Create Username">
+                </form>
+            </div>
+    
+            <div id = "searchUI" class = "hide">
+                <form id = 'searchFriend'>
+                    <input type = "text" id = "friend" name = "friend">
+                    <input type = "submit" id = "searchUser" value = "Search Users">
+                </form>
+            </div>
+
+            <div id = 'optionsContainer' class = 'hide'>
+                <select id = 'selectColor'> 
+                    <option value ='' disabled selected>Select your starting color  </option>
+                    <option value ='white'>White</option>
+                    <option value ='black'>Black</option>
+                </select>
+            </div>
+    
+            <div id = "setUp" class = "hide">
+                <button id = 'singlePlayer' class = 'playerButton' type="button">Single Player</button>
+                <button id = 'multiPlayer' class = 'playerButton' type="button">Two Player</button>
+            </div>
+
+            <div id = "notOnline" class = "hide">
+                <p id = "notOnlineText"></p>
+                <button type = "button" id = "close3" class = 'matchButton'>Close &#10006</button>
+            </div>
+
+            <div id = "matchRequest" class = "hide">
+                <p id = "request"></p>
+                <div style = "display: flex;">
+                <button type = "button" id = "accept" class = 'matchButton'>Accept &#10004</button>
+                <button type = "button" id = "reject" class = 'matchButton'>Reject &#10006</button>
+                </div>
+            </div>
+
+            <div id = "matchAnswer" class = "hide">
+                <p id = "answer"></p>
+                <button type = "button" id = "close" class = 'matchButton'>Close &#10006</button>
+            </div>
+
+            <div id = "enemyDisconnected" class = "hide">
+                <p id = "disconnectText">e</p>
+                <button type = "button" id = "close2" class = 'matchButton'>Close &#10006</button>
+            </div>
+
+        </div>
+        
+        
+        
+        <div class = 'starterBoard'>
+            <h3> CHECKERS</h3>
+        </div>
+
+
+    </div>
+    <div id = 'playersOnline'>
+    </div>
+
+
+
+
+    <script src="checkersM.js"></script>
+</body>

@@ -1,0 +1,291 @@
+body {
+    background-color: yellow;
+    background-image: url('/imgs/Carpet_8K_Color.png');
+    background-size: contain;
+    height: 100%;
+    width: 100%;
+    margin: 0 auto;
+    justify-content: center;
+}
+
+@media only screen and (hover: none) and (pointer: coarse) {
+
+    input,
+    select,
+    textarea {
+      font-size: 11px;
+    }
+  
+    input:focus,
+    select:focus,
+    textarea:focus {
+      font-size: 16px;
+    }
+}
+
+
+#mainContainer {
+    position: relative;
+    width: 100%;
+    display: grid;
+    justify-content: center;
+    justify-self: center;
+    text-align: center;
+    margin: 0 auto;
+
+}
+
+#boardContainer {
+    display: grid;
+    justify-content: center;
+    justify-self: center;
+    margin: 40px auto;
+    grid-template-rows: 40px 40px 40px 40px 40px 40px 40px 40px;
+    grid-template-columns: 40px 40px 40px 40px 40px 40px 40px 40px;
+    position: relative;
+    box-shadow: -2px -2px 63px 40px rgba(0,0,0,0.75);
+    width: fit-content;
+    background-color: darkred;
+    background-image: url('Dragon_of_Bhutan.png');
+    background-blend-mode: multiply;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 12px ridge burlywood;
+    
+}
+
+.gridSpot {
+    display: grid;
+    border: 1px solid black;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    color: black;
+    background-color: white;
+    background-size: contain ;
+}
+
+.gridLabel {
+    display: block;
+    pointer-events: none;
+}
+
+.winnerBoard {
+    display: none !important;
+    background-color: black;
+    width: fit-content;
+    border-radius: 30px;
+    border: 5px solid yellow;
+    top: 35%;
+    left: 41%;
+    border-radius: 30px;
+    border: 5px solid yellow;
+    color: white;
+    margin: 0 auto;
+    position: absolute;
+    text-align: center;
+    z-index: 1000;
+}
+
+.starterBoard {
+    display: grid;
+    background-color: black;
+    width: fit-content;
+    padding: 5px;
+    margin: 10px auto;
+    border-radius: 30px;
+    border: 5px solid yellow;
+    color: white;
+    text-align: center;
+    position: relative;
+    z-index: 1000;
+}
+
+
+.king {
+    background-image: url('/imgs/ChessKing.png');
+    rotate: 0deg
+}
+
+.normal {
+    background-image: url('/imgs/Dragon_of_Bhutan.png');
+    rotate: 18deg;
+}
+
+
+.checkerPiece {
+    display: grid;
+    padding: 0px;
+    position: relative;
+    border: 4px double white;
+    border-radius: 50%;
+    box-sizing: border-box;
+    align-self: center;
+    justify-self: center;
+    margin: 0 auto;
+    background-size:contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 80%;
+    box-shadow: 3px 8px 10px 5px rgba(0,0,0,0.75);
+
+}
+
+.possibleMove {
+    display: grid;
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+    position: relative;
+    border: 4px double white;
+    border-radius: 50%;
+    box-sizing: border-box;
+    align-self: center;
+    justify-self: center;
+    margin: 0 auto;
+    z-index: 999;
+    background-color: lightgreen;
+    opacity: .5;
+    /**pointer-events: none; */
+}
+
+
+.gridLabel {
+    padding: 0px;
+    margin: 0px;
+    position: absolute;
+}
+
+.show {
+    display: grid !important;
+}
+
+.hide {
+    display: none !important;
+}
+
+#selectColor {
+    z-index: 999;
+}
+
+
+#optionsContainer {
+    padding: 5px 0;
+    /**position: absolute;*/
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
+}
+
+#userInterface {
+    position: relative;
+    text-align: center;
+    justify-content: center;
+    margin: 0 auto;
+    display: grid;
+    background-color: green;
+    width:400px;
+    height: fit-content;
+}
+
+#createAccount {
+    padding: 20px 0;
+    text-align: center;
+    margin: 0 auto;
+    width: fit-content;
+}
+
+#searchUI {
+    padding: 20px 0;
+    text-align: center;
+    margin: 0 auto;
+    width: fit-content;
+
+}
+
+
+#setUp {
+    padding: 20px 0;
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.playerButton {
+    padding: 20px;
+    width: fit-content;
+    height: fit-content;
+    margin: auto auto;
+    position: relative;
+}
+
+@keyframes mynewmove {
+    from {top: 0px;}
+    to {top: 325px;}
+}
+
+#matchRequest, #matchAnswer, #enemyDisconnected, #notOnline {
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    justify-self: center;
+    align-self: center;
+    background-color: whitesmoke;
+    border: 1px solid blue;
+    width: max-content;
+    height: fit-content;
+    z-index: 99999999;
+}
+
+.matchButton {
+    padding: 10px;
+    display: flex;
+    width: fit-content;
+    height: fit-content;
+    margin: 5px auto;
+    position: relative;
+}
+
+#playersOnline {
+    display: inline-block;
+    position: absolute;
+    z-index: 999999999;
+    border-radius: 10px;
+    top: 0px;
+    left: 0px;
+    padding: 0px;
+    margin: 0px;
+}
+
+.dropdownBtn:hover {
+    background-color: #ddd; 
+}
+  
+.dropdownContent {
+    position: absolute;
+    display: none;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    width: 100%;
+    background-color: white;
+}
+
+.dropdownContent h4 {
+    display: block;
+    color: black;
+    padding: 1px;
+}
+
+#playersOnline p:hover {
+    background-color: #ddd;
+}
+
+.show1 {
+    display: block;
+}
+
+
+
+
+
+
