@@ -1,6 +1,5 @@
 body {
-    background-color: yellow;
-    background-image: url('/imgs/Carpet_8K_Color.png');
+    background-color: rgb(0, 0, 35);
     background-size: contain;
     height: 100%;
     width: 100%;
@@ -32,27 +31,26 @@ body {
     justify-self: center;
     text-align: center;
     margin: 0 auto;
-
+    cursor: default;
 }
 
 #boardContainer {
     display: grid;
     justify-content: center;
     justify-self: center;
-    margin: 40px auto;
+    margin: 10px auto;
     grid-template-rows: 40px 40px 40px 40px 40px 40px 40px 40px;
     grid-template-columns: 40px 40px 40px 40px 40px 40px 40px 40px;
     position: relative;
-    box-shadow: -2px -2px 63px 40px rgba(0,0,0,0.75);
+    box-shadow: -2px -2px 63px 10px rgba(0,0,0,0.75);
     width: fit-content;
     background-color: darkred;
-    background-image: url('Dragon_of_Bhutan.png');
+    background-image: url('/imgs/Dragon_of_Bhutan.png');
     background-blend-mode: multiply;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    border: 12px ridge burlywood;
-    
+    border: 12px ridge burlywood; 
 }
 
 .gridSpot {
@@ -71,35 +69,17 @@ body {
     pointer-events: none;
 }
 
-.winnerBoard {
-    display: none !important;
+#winnerBoard {
+    display: grid;
     background-color: black;
     width: fit-content;
-    border-radius: 30px;
-    border: 5px solid yellow;
-    top: 35%;
-    left: 41%;
     border-radius: 30px;
     border: 5px solid yellow;
     color: white;
     margin: 0 auto;
     position: absolute;
     text-align: center;
-    z-index: 1000;
-}
-
-.starterBoard {
-    display: grid;
-    background-color: black;
-    width: fit-content;
-    padding: 5px;
-    margin: 10px auto;
-    border-radius: 30px;
-    border: 5px solid yellow;
-    color: white;
-    text-align: center;
-    position: relative;
-    z-index: 1000;
+    z-index: 1003;
 }
 
 
@@ -129,13 +109,14 @@ body {
     background-position: center;
     background-size: 80%;
     box-shadow: 3px 8px 10px 5px rgba(0,0,0,0.75);
+    cursor: grab;
 
 }
 
 .possibleMove {
     display: grid;
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     padding: 0px;
     position: relative;
     border: 4px double white;
@@ -144,9 +125,10 @@ body {
     align-self: center;
     justify-self: center;
     margin: 0 auto;
-    z-index: 999;
-    background-color: lightgreen;
+    z-index: 1001;
+    background-color: #47F5A1;
     opacity: .5;
+    cursor: pointer;
     /**pointer-events: none; */
 }
 
@@ -166,17 +148,9 @@ body {
 }
 
 #selectColor {
-    z-index: 999;
+    z-index: 1004;
 }
 
-
-#optionsContainer {
-    padding: 5px 0;
-    /**position: absolute;*/
-    text-align: center;
-    margin: 0 auto;
-    width: 100%;
-}
 
 #userInterface {
     position: relative;
@@ -184,29 +158,38 @@ body {
     justify-content: center;
     margin: 0 auto;
     display: grid;
-    background-color: green;
-    width:400px;
-    height: fit-content;
+    background-color: #00A856;
+    width: 340px;
+    height: 180px;
+    border-radius: 10px;
 }
 
-#createAccount {
-    padding: 20px 0;
+#createAccountUI {
+    padding: 5px 0;
     text-align: center;
-    margin: 0 auto;
+    margin: 5px auto;
+    height: fit-content;
     width: fit-content;
+}
+
+#createUser {
+    cursor: pointer;
 }
 
 #searchUI {
-    padding: 20px 0;
+    padding: 5px 0;
     text-align: center;
-    margin: 0 auto;
+    margin: 5px auto;
     width: fit-content;
+    height: fit-content;
+}
 
+#searchUser {
+    cursor: pointer;
 }
 
 
 #setUp {
-    padding: 20px 0;
     text-align: center;
     margin: 0 auto;
     width: 100%;
@@ -216,26 +199,36 @@ body {
     padding: 20px;
     width: fit-content;
     height: fit-content;
-    margin: auto auto;
+    margin: 0 auto;
     position: relative;
+    border-radius: 20px;
+    cursor: pointer;
 }
 
-@keyframes mynewmove {
-    from {top: 0px;}
-    to {top: 325px;}
-}
 
-#matchRequest, #matchAnswer, #enemyDisconnected, #notOnline {
+#matchRequest, #matchAnswer, #enemyDisconnected, #notOnline, #invitePlayer {
     position: absolute;
     text-align: center;
     justify-content: center;
     justify-self: center;
     align-self: center;
     background-color: whitesmoke;
-    border: 1px solid blue;
+    border: 20px solid blue;
+    border-radius: 20px;
+    padding: 10px;
     width: max-content;
     height: fit-content;
-    z-index: 99999999;
+    z-index: 1005;
+}
+
+#matchRequest, #invitePlayer {
+    border: 20px solid #47F5A1;
+    border-radius: 20px;
+}
+
+#matchAnswer, #enemyDisconnected, #notOnline {
+    border: 10px solid #F55C47;
+    border-radius: 20px;
 }
 
 .matchButton {
@@ -245,17 +238,51 @@ body {
     height: fit-content;
     margin: 5px auto;
     position: relative;
+    border-radius: 10px;
+    cursor: pointer;
 }
+
+button:hover {
+    background-color: #ddd;
+
+}
+
 
 #playersOnline {
     display: inline-block;
-    position: absolute;
-    z-index: 999999999;
-    border-radius: 10px;
-    top: 0px;
-    left: 0px;
+    position: relative;
     padding: 0px;
-    margin: 0px;
+    justify-items: center;
+    text-align: center;
+    margin: 10px auto;
+    width: fit-content;
+    z-index: 1003;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+#optionsContainer {
+    padding: 0px;
+    text-align: center;
+    margin: 5px auto;
+    width: 100%;
+    z-index: 1004;
+    height: 2ch;
+    cursor: pointer;
+}
+
+#searchFriendDiv {
+    padding: 0px;
+    text-align: center;
+    margin: 5px auto;
+    width: 100%;
+    z-index: 1004;
+    height: 2ch;
+}
+
+.dropdownBtn {
+    border-radius: 0px;
+    cursor: pointer;
 }
 
 .dropdownBtn:hover {
@@ -267,16 +294,20 @@ body {
     display: none;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     width: 100%;
+    padding: 0px;
     background-color: white;
 }
 
-.dropdownContent h4 {
+.dropdownContent a {
     display: block;
     color: black;
-    padding: 1px;
+    padding: 10px;
+    text-decoration: none;
+    border: 1px solid black;
+    text-align: center;
 }
 
-#playersOnline p:hover {
+#playersOnline a:hover {
     background-color: #ddd;
 }
 
@@ -285,7 +316,24 @@ body {
 }
 
 
+@keyframes mynewmove {
+    from {top: 0px;}
+    to {top: 325px;}
+}
 
+.starterBoard {
+    display: grid;
+    width: fit-content;
+    margin: 0px auto;
+    padding: 0px;
+    color: white;
+    text-align: center;
+    position: relative;
+    z-index: 1000;
+}
 
-
-
+.starterBoard a {
+    margin: 0 auto;
+    font-family: 'Bungee Spice', cursive;
+    font-size: 1.7em ;
+}
