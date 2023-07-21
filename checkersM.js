@@ -54,8 +54,9 @@ let playerColor
 let single
 let matchRoom
 
-const winnerBoard = document.getElementById('winnerBoard')
-const winnerDiv = document.querySelector('.winnerBoard')
+let clickSelection
+
+
 
 const starterDiv = document.querySelector('.starterDiv')
 
@@ -99,13 +100,26 @@ const selectColor = document.getElementById('selectColor')
 const optionsContainer = document.getElementById('optionsContainer')
 
 const searchUI = document.getElementById('searchUI');
-const searchFriend = document.getElementById('searchFriend');
+const searchFriendForm = document.getElementById('searchFriendForm');
+const searchFriendDiv = document.getElementById('searchFriendDiv');
 const friendName = document.getElementById('friend')
 
 const matchRequest = document.getElementById('matchRequest');
 const requestText = document.getElementById('request')
 const accept = document.getElementById('accept');
 const reject = document.getElementById('reject');
+
+
+const inviteFriend = document.getElementById('invitePlayer')
+const accept2 = document.getElementById('accept2');
+const reject2 = document.getElementById('reject2');
+const inviteText = document.getElementById('inviteText')
+
+const winnerText = document.getElementById('#winnertext')
+const winnerDiv = document.querySelector('#winnerBoard')
+const restartText = document.querySelector('#restart')
+const accept3 = document.getElementById('accept3');
+const reject3 = document.getElementById('reject3');
 
 const matchAnswer = document.getElementById('matchAnswer');
 const answerText = document.getElementById('answer')
@@ -130,62 +144,77 @@ function showOnline() {
     dropDownBtn.classList.toggle("clicked");
 
     window.onclick = function stopShow(event) {
-    if (!event.target.matches('.dropdownBtn')) {
-      const dropdowns = document.querySelector('.dropdownContent');
-      if (dropdowns.classList.contains('show1')) {
-        dropdowns.classList.remove('show1')
-      }
-    }
+        if (!event.target.matches('.dropdownBtn')) {
+            const dropdowns = document.querySelector('.dropdownContent');
+            if (dropdowns.classList.contains('show1')) {
+                dropdowns.classList.remove('show1')
+            }
+        }
     }
 }
 
+
 function showOnlineUsers(msg) {
-        while (playersOnline.firstChild) {
-            playersOnline.firstChild.remove()
+    while (playersOnline.firstChild) {
+        playersOnline.firstChild.remove()
+    }
+
+    let showHide = document.createElement('button');
+    showHide.setAttribute('id', 'showHide')
+    showHide.setAttribute('class', 'dropdownBtn')
+    showHide.innerHTML = `${msg.length -1} Players Online: &#9776`
+    playersOnline.appendChild(showHide)
+
+
+    const myDropdown = document.createElement('div')
+    myDropdown.setAttribute('id', 'myDropdown')
+    myDropdown.setAttribute('class', 'dropdownContent')
+    
+
+    for (const player of msg) {
+        if (player != user) {
+            let newPlayer = document.createElement('a')
+            newPlayer.setAttribute('class', 'online')
+            newPlayer.textContent = player;
+            myDropdown.appendChild(newPlayer)
+            newPlayer.addEventListener('mousedown', (msg) => {
+                inviteText.textContent = `Send match invite to ${player}?`
+                inviteFriend.classList.remove('hide');
+                clickSelection = player
+            }) 
         }
+    }
 
-        let showHide = document.createElement('button');
-        showHide.setAttribute('id', 'showHide')
-        showHide.setAttribute('class', 'dropdownBtn')
-        showHide.innerHTML = 'Players Online: &#9776'
-        playersOnline.appendChild(showHide)
+    playersOnline.appendChild(myDropdown)
 
-
-        const myDropdown = document.createElement('div')
-        myDropdown.setAttribute('id', 'myDropdown')
-        myDropdown.setAttribute('class', 'dropdownContent')
-        
-
-        for (const player of msg) {
-            if (player != user) {
-                console.log('hello loser')
-                let newPlayer = document.createElement('h4')
-                newPlayer.setAttribute('class', 'online')
-                newPlayer.textContent = player;
-                myDropdown.appendChild(newPlayer)
-            }
-        }
-        playersOnline.appendChild(myDropdown)
-
-        showHide.addEventListener('click', (e) => {
-            showOnline()
-        })
+    showHide.addEventListener('click', (e) => {
+        showOnline()
+    })
 }
 
 function createNewUser() {
-    if (userName.value != "") {
+    if (userName.value != "" && userName.value.length <= 17) {
         socket = io()
         user = userName.value.toLowerCase()
+        turnOnSocket()
         socket.emit("create user", user)
     }
+    else {alert('Username is too long.')}
     userName.value = ""
+    
+}
+
+function searchNewFriend(userN) {
+    if (userN != "") {
+        possibleFriend = userN.toLowerCase()
+        socket.emit("search friend", [user, possibleFriend, 'black'])     
+    }
 }
 
 
 userCreate.addEventListener('submit', (e) => {
     e.preventDefault();
-    createNewUser()
-    turnOnSocket()
+    createNewUser()   
 })
 
 
@@ -193,30 +222,24 @@ singlePlayer.addEventListener('click', (e) => {
     socket.emit("disconnect friend", [friend, user]);
     possibleFriend = ""
     friend = ""
-    searchUI.classList.add('hide')
     clearBoard()
+    searchFriendDiv.classList.add('hide')
     optionsContainer.classList.remove('hide')
     single = true
+    console.log('hello')
 })
 
 multiPlayer.addEventListener('click', (e) => {
     optionsContainer.classList.add('hide')
-    searchUI.classList.remove('hide')
+    searchFriendDiv.classList.remove('hide')
     console.log('hello')
 })
 
-searchFriend.addEventListener('submit', (e) => {
+searchFriendForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    searchNewFriend()
-})
-
-function searchNewFriend() {
-    if (friendName.value != "") {
-        possibleFriend = friendName.value.toLowerCase()
-        socket.emit("search friend", [user, possibleFriend, 'black'])     
-    }
+    searchNewFriend(friendName.value)
     friendName.value = ""
-}
+})
 
 accept.addEventListener('click', (e) => {
     socket.emit("disconnect friend", [friend, user]);
@@ -232,7 +255,32 @@ accept.addEventListener('click', (e) => {
 reject.addEventListener('click', (e) => {
     socket.emit('reject match', [possibleFriend, user, `${user} has rejected your match` ])
     matchRequest.classList.add('hide');
+})
+
+accept2.addEventListener('click', (e) => {
+    searchNewFriend(clickSelection)
+    invitePlayer.classList.add('hide');
+})
+
+reject2.addEventListener('click', (e) => {
+    invitePlayer.classList.add('hide');
+    inviteText.textContent = ''
+})
+
+accept3.addEventListener('click', (e) => {
+    winnerDiv.classList.add('hide');
+    if (single == false) {socket.emit('accept match', [friend, user, playerColor])}
+    playerColor == 'black' ? playerColor = 'white' : playerColor = 'black';
+    startGame(playerColor)
+})
+
+reject3.addEventListener('click', (e) => {
+    winnerDiv.classList.add('hide');
+    socket.emit("disconnect friend", [friend, user]);
+    possibleFriend = ""
     friend = ""
+    clearBoard()
+    single = true
 })
 
 closeButton.addEventListener('click', (e) => {
@@ -248,14 +296,13 @@ closeButton3.addEventListener('click', (e) => {
     notOnline.classList.add('hide')
 })
 
-
-
 function turnOnSocket() {
     if (socket != null) {
         socket.on('valid user', (msg) => {
             console.log(msg)
             createAccountUI.classList.add('hide');
             setUp.classList.remove('hide')
+            searchUI.classList.remove('hide')
         })
         
         socket.on('not valid', (msg) => {
@@ -825,7 +872,7 @@ function checkMoveBackLeft(piece) {
 
 
 function checkMovesBlack(piece) {
-    if (!(piece.classList.contains('king'))) {
+    if ((!piece.classList.contains('king'))) {
         resetMoveVariables()
         resetForcedData(piece)
         checkMoveBackRight(piece)
@@ -841,7 +888,7 @@ function checkMovesBlack(piece) {
         
 
 function checkMovesWhite(piece) {
-    if (!(piece.classList.contains('king'))) {
+    if ((!piece.classList.contains('king'))) {
         resetMoveVariables()
         resetForcedData(piece)
         checkMoveForwardRight(piece)
@@ -936,7 +983,7 @@ function setDraggable(piece) {
     else if (checkAllForceBool()) {
         if (checkAllForceData(piece)) {
             piece.style.boxShadow = '0px 0px 4px 5px rgba(225, 245, 3, 0.75)'
-            piece.setAttribute('draggable', 'true')
+            if (playerColor == playerTurn) {piece.setAttribute('draggable', 'true')}
         }
         else {
             piece.setAttribute('draggable', 'false')
@@ -947,7 +994,6 @@ function setDraggable(piece) {
 
 function forceMove() {
     pieces.forEach(piece => {
-        if (playerColor == playerTurn) {
             if (piece.dataset.side == playerTurn) {
                 if (playerTurn == 'black') {
                     checkMovesBlack(piece)
@@ -959,63 +1005,17 @@ function forceMove() {
                     setDraggable(piece)
                 }
             }
-        }
         else {
             piece.setAttribute('draggable', 'false')
         }
     })
 }
 
-/** 
-function forceMove() {
-
-
-    pieces.forEach(piece => {
-        if (single == true) {
-            if (piece.dataset.side == playerTurn) {
-                if (playerTurn == 'black') {
-                    checkMovesBlack(piece)
-                    setDraggable(piece)
-                
-                }
-                else if (playerTurn == 'white') {
-                    checkMovesWhite(piece)
-                    setDraggable(piece)
-                }
-            }
-            else {
-                piece.setAttribute('draggable', 'false')
-            }
-        }
-        else {
-            if (piece.dataset.side == playerTurn && playerColor == playerTurn) {
-                if (playerColor == 'black') {
-                    checkMovesBlack(piece)
-                    setDraggable(piece)
-                
-                }
-                else if (playerTurn == 'white') {
-                    checkMovesWhite(piece)
-                    setDraggable(piece)
-                }
-            }
-            else {
-                piece.setAttribute('draggable', 'false')
-            }
-        } 
-    })
-}
-
-*/
-
-
-
-
 
 function checkDoubleJump() {
     if (jumpBool === true) {
         pieces.forEach(piece => {
-            if (playerTurn == 'black' && playerColor == playerTurn) {
+            if (playerTurn == 'black') {
                 if (piece.dataset.doubleJump == 'true') {
                     checkMovesBlack(piece)
                     setDraggable(piece)
@@ -1025,7 +1025,7 @@ function checkDoubleJump() {
                     piece.setAttribute('draggable', 'false')
                 }
             }
-            else if (playerTurn == 'white' && playerColor == playerTurn) {
+            else if (playerTurn == 'white') {
                 if (piece.dataset.doubleJump == 'true') {
                     checkMovesWhite(piece)
                     setDraggable(piece)
@@ -1244,18 +1244,32 @@ function highlight() {
                     removePossibleMoves()
                     
                     
-
+                    
                     if (selection.dataset.side == 'black') {
                         checkMovesBlack(selection)
+                        if (selection.classList.contains('king')) {
+                            createPossibleMove(forwardLeft)
+                            createPossibleMove(forwardRight)
+                            createPossibleMove(backLeft)
+                            createPossibleMove(backRight)
+                        }
+                        else {
                         createPossibleMove(backLeft)
                         createPossibleMove(backRight)
-
+                        }
                     }
                     else if (selection.dataset.side == 'white') {
                         checkMovesWhite(selection)
+                        if (selection.classList.contains('king')) {
+                            createPossibleMove(backLeft)
+                            createPossibleMove(backRight)
+                            createPossibleMove(forwardLeft)
+                            createPossibleMove(forwardRight)
+                        }
+                        else {
                         createPossibleMove(forwardLeft)
                         createPossibleMove(forwardRight)
-
+                        }
                     }
                     createClickablePossibleMoves(selection)
                     
@@ -1270,14 +1284,30 @@ function highlight() {
 
                         if (selection.dataset.side == 'black') {
                             checkMovesBlack(selection)
-                            createPossibleMove(backLeft)
-                            createPossibleMove(backRight)
+                            if (selection.classList.contains('king')) {
+                                createPossibleMove(forwardLeft)
+                                createPossibleMove(forwardRight)
+                                createPossibleMove(backLeft)
+                                createPossibleMove(backRight)
+                            }
+                            else {
+                                createPossibleMove(backLeft)
+                                createPossibleMove(backRight)
+                            }
     
                         }
                         else if (selection.dataset.side == 'white') {
                             checkMovesWhite(selection)
-                            createPossibleMove(forwardLeft)
-                            createPossibleMove(forwardRight)
+                            if (selection.classList.contains('king')) {
+                                createPossibleMove(backLeft)
+                                createPossibleMove(backRight)
+                                createPossibleMove(forwardLeft)
+                                createPossibleMove(forwardRight)
+                            }
+                            else {
+                                createPossibleMove(forwardLeft)
+                                createPossibleMove(forwardRight)
+                            }
     
                         }
                         createClickablePossibleMoves(selection)
@@ -1424,13 +1454,13 @@ function winCondition() {
         if (whiteCount == 0) {
             blackWins = true
             playerTurn = ''
-            winnerBoard.textContent = 'The winner is Black!'
+            winnerText.textContent = 'The winner is Black!'
             return blackWins
         }
         else if (blackCount == 0) {
             whiteWins = true
             playerTurn = ''
-            winnerBoard.textContent = 'The winner is White!'
+            winnerText.textContent = 'The winner is White!'
             return whiteWins
         } 
     //}   
@@ -1439,8 +1469,14 @@ function winCondition() {
 function finishGame() {
     if (blackWins || whiteWins) {
         playerTurn = 'none'
-        winnerDiv.classList.add('show')
+        winnerDiv.classList.remove('hide')
         forceMove()
     }
 }
 
+/** 
+Online Chat Page
+
+Built with Node.js, Express, Socket.IO and MongoDB Atlas 
+
+Try here: https://chatv2.azurewebsites.net/ */
