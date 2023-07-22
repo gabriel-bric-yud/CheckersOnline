@@ -34,6 +34,13 @@ body {
     cursor: default;
 }
 
+#gameContainer {
+    display: grid;
+    justify-content: center;
+    justify-self: center;
+    position: relative;
+}
+
 #boardContainer {
     display: grid;
     justify-content: center;
@@ -73,15 +80,25 @@ body {
     display: grid;
     background-color: black;
     width: fit-content;
-    border-radius: 30px;
-    border: 5px solid yellow;
+    border-radius: 5px;
     color: white;
+    border: 5px ridge #00A856;
     margin: 0 auto;
     position: absolute;
     text-align: center;
+    align-self: center;
+    justify-self: center;
     z-index: 1003;
 }
 
+#winnerBoard h3 {
+    padding: 5px;
+    margin: 0 auto;
+}
+#winnerBoard p {
+    padding:0px;
+    margin: 0 auto;
+}
 
 .king {
     background-image: url('/imgs/ChessKing.png');
@@ -213,7 +230,7 @@ body {
     justify-self: center;
     align-self: center;
     background-color: whitesmoke;
-    border: 20px solid blue;
+    border: 5px ridge blue;
     border-radius: 20px;
     padding: 10px;
     width: max-content;
@@ -222,12 +239,12 @@ body {
 }
 
 #matchRequest, #invitePlayer {
-    border: 20px solid #47F5A1;
+    border: 10px ridge #47F5A1;
     border-radius: 20px;
 }
 
 #matchAnswer, #enemyDisconnected, #notOnline {
-    border: 10px solid #F55C47;
+    border: 5px ridge #F55C47;
     border-radius: 20px;
 }
 
@@ -246,7 +263,6 @@ button:hover {
     background-color: #ddd;
 
 }
-
 
 #playersOnline {
     display: inline-block;
