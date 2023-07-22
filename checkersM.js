@@ -273,7 +273,7 @@ reject2.addEventListener('click', (e) => {
 
 accept3.addEventListener('click', (e) => {
     winnerDiv.classList.add('hide');
-    if (single == false) {socket.emit('accept match', [ playerColor, friend, user])}
+    if (single == false) {socket.emit('accept match', [friend, user, playerColor])}
     else {
         startGame(playerColor)
     }
@@ -371,6 +371,8 @@ function turnOnSocket() {
             enemyDisconnected.classList.remove('hide');
             socket.emit('disconnect accepted', (msg))
         })
+
+
 
         socket.on('player color', (msg) => {
             socket.emit("game start", ([possibleFriend, user]))
