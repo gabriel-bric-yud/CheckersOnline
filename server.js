@@ -57,6 +57,7 @@ function createNewRoom(socket, roomName) {
 
 function createUser(socket, message) {
     socket.data.user = message.toLowerCase()
+    socket.data.enemy = ""
     console.log(`User ${socket.data.user} now created`)
     createNewRoom(socket, message)
 }
@@ -171,7 +172,7 @@ io.on('connection', async (socket) =>{
 
 
 server.listen(port, () => {
-    console.log('listening on port:' + port)
+    console.log('listening on port: ' + port)
 })
 
 
