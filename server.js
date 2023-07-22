@@ -11,7 +11,7 @@ let roomCount = 0
 let roomArray = []
 let matchArray = []
 
-const port = process.env.PORT || '443'
+const port = process.env.PORT || '4000'
 app.set('port', port);
 
 app.use(express.static(__dirname));
@@ -49,7 +49,7 @@ function createNewRoom(socket, roomName) {
     //socket.join('room'+ roomCount);
     socket.join(roomName.toLowerCase())
     roomArray.push(roomName.toLowerCase())
-    roomCount++
+    roomCount = roomArray.length
     console.log(`Current rooms: ${roomArray}`)
     socket.broadcast.emit('players online', roomArray)
     socket.emit('players online', roomArray)
@@ -71,7 +71,7 @@ function createMatch(socket, msg) {
 function removeRoom(room) {
     if (checkAvailableNames(room, roomArray)) {
         roomArray.splice((roomArray.indexOf(room)), 1)
-        roomCount--
+        roomCount = roomArray.length
     }
     console.log(`Current rooms: ${roomArray}`)
 }
@@ -137,6 +137,10 @@ io.on('connection', async (socket) =>{
         //io.to(msg.match).emit('new move', msg)
     })
 
+    socket.on('page visibility', (msg) => {
+        socket.data.visibility = msg
+        console.log('page visibility change on ' + socket.data.user)
+    })
 
 
     socket.on('disconnect friend', (msg) => {
@@ -145,6 +149,10 @@ io.on('connection', async (socket) =>{
 
     socket.on('disconnect function', (msg) => {
         socket.disconnect(true)
+    })
+
+    socket.on('disconnect accepted', (msg) => {
+        socket.data.enemy = ''
     })
 
     socket.on('disconnect', () => {
@@ -163,7 +171,7 @@ io.on('connection', async (socket) =>{
 
 
 server.listen(port, () => {
-    console.log('listening on port: 4000')
+    console.log('listening on port:' + port)
 })
 
 
