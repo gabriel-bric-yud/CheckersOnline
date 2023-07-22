@@ -1,8 +1,9 @@
 const boardContainer = document.getElementById('boardContainer');
-
+let selection
 let gameBoard = []
 const squareSize = '40px'
 const pieceSize = '30px'
+
 
 
 const darkSquare = 'indigo' //'transparent'//'black'//'darkolivegreen' //'indigo'
@@ -115,7 +116,7 @@ const accept2 = document.getElementById('accept2');
 const reject2 = document.getElementById('reject2');
 const inviteText = document.getElementById('inviteText')
 
-const winnerText = document.getElementById('#winnertext')
+const winnerText = document.getElementById('winnerText')
 const winnerDiv = document.querySelector('#winnerBoard')
 const restartText = document.querySelector('#restart')
 const accept3 = document.getElementById('accept3');
@@ -128,6 +129,7 @@ const closeButton = document.getElementById('close')
 const enemyDisconnected = document.getElementById('enemyDisconnected');
 const disconnectText = document.getElementById('disconnectText')
 const closeButton2 = document.getElementById('close2')
+const waitButton = document.getElementById('wait')
 
 
 const notOnline = document.getElementById('notOnline');
@@ -162,7 +164,9 @@ function showOnlineUsers(msg) {
     let showHide = document.createElement('button');
     showHide.setAttribute('id', 'showHide')
     showHide.setAttribute('class', 'dropdownBtn')
-    showHide.innerHTML = `${msg.length -1} Players Online: &#9776`
+    let playerCount = msg.length - 1
+    if (playerCount <= 0) {playerCount = 0}
+    showHide.innerHTML = `${playerCount} Players Online: &#9776`
     playersOnline.appendChild(showHide)
 
 
@@ -192,16 +196,15 @@ function showOnlineUsers(msg) {
     })
 }
 
-function createNewUser() {
-    if (userName.value != "" && userName.value.length <= 17) {
+function createNewUser(userN) {
+    if (userN != "" && userN.length <= 14) {
         socket = io()
-        user = userName.value.toLowerCase()
+        user = userN.toLowerCase()
         turnOnSocket()
         socket.emit("create user", user)
     }
     else {alert('Username is too long.')}
-    userName.value = ""
-    
+    userN = ""
 }
 
 function searchNewFriend(userN) {
@@ -214,7 +217,7 @@ function searchNewFriend(userN) {
 
 userCreate.addEventListener('submit', (e) => {
     e.preventDefault();
-    createNewUser()   
+    createNewUser(userName.value)   
 })
 
 
@@ -232,7 +235,6 @@ singlePlayer.addEventListener('click', (e) => {
 multiPlayer.addEventListener('click', (e) => {
     optionsContainer.classList.add('hide')
     searchFriendDiv.classList.remove('hide')
-    console.log('hello')
 })
 
 searchFriendForm.addEventListener('submit', (e) => {
@@ -248,6 +250,8 @@ accept.addEventListener('click', (e) => {
     socket.emit('accept match', [friend, user, 'black'])
     matchRoom = `${friend}+${user}`
     matchRequest.classList.add('hide');
+    optionsContainer.classList.add('hide');
+    searchFriendDiv.classList.remove('hide') 
     single = false
     startGame(playerColor)
 })
@@ -269,37 +273,60 @@ reject2.addEventListener('click', (e) => {
 
 accept3.addEventListener('click', (e) => {
     winnerDiv.classList.add('hide');
-    if (single == false) {socket.emit('accept match', [friend, user, playerColor])}
-    playerColor == 'black' ? playerColor = 'white' : playerColor = 'black';
-    startGame(playerColor)
+    if (single == false) {socket.emit('accept match', [ playerColor, friend, user])}
+    else {
+        startGame(playerColor)
+    }
 })
 
 reject3.addEventListener('click', (e) => {
+    clearBoard()
     winnerDiv.classList.add('hide');
     socket.emit("disconnect friend", [friend, user]);
     possibleFriend = ""
     friend = ""
-    clearBoard()
-    single = true
+    
 })
 
 closeButton.addEventListener('click', (e) => {
     matchAnswer.classList.add('hide');
-    enemyDisconnected.classList.add('hide')
 })
 
 closeButton2.addEventListener('click', (e) => {
     enemyDisconnected.classList.add('hide')
 })
 
+/** 
+waitButton.addEventListener('click', (e) => {
+    enemyDisconnected.classList.add('hide')
+})
+
+*/
+
+
 closeButton3.addEventListener('click', (e) => {
     notOnline.classList.add('hide')
 })
 
+
+
+
 function turnOnSocket() {
     if (socket != null) {
+
+        document.addEventListener('visibilitychange', (e) => {
+            if (document.hidden) {
+                socket.emit('page visibility', 'hidden')
+            }
+            else {
+                possibleFriend = ""
+                friend = ""
+                clearBoard()
+                createNewUser(userN)
+            }
+        })
+        
         socket.on('valid user', (msg) => {
-            console.log(msg)
             createAccountUI.classList.add('hide');
             setUp.classList.remove('hide')
             searchUI.classList.remove('hide')
@@ -312,12 +339,11 @@ function turnOnSocket() {
             socket = null
         })
 
-        socket.on('players online', (msg) => {showOnlineUsers(msg), console.log(msg)})
+        socket.on('players online', (msg) => {showOnlineUsers(msg)})
 
         socket.on('not online', (msg) => {
             notOnlineText.textContent = msg
             notOnline.classList.remove('hide');
-            console.log(msg)
         })
 
         socket.on('friend found', (msg) => {
@@ -328,7 +354,6 @@ function turnOnSocket() {
             possibleFriend = msg[0]
             requestText.textContent = msg[2]
             matchRequest.classList.remove('hide');
-            console.log(msg)
         })
 
 
@@ -339,12 +364,12 @@ function turnOnSocket() {
         })
 
         socket.on('disconnect friend', (msg) => {
+            friend = ""
+            possibleFriend = ""
+            clearBoard()
             disconnectText.textContent = msg[1]
             enemyDisconnected.classList.remove('hide');
-            friend = ""
-            console.log(msg)
-            single = true
-            clearBoard()
+            socket.emit('disconnect accepted', (msg))
         })
 
         socket.on('player color', (msg) => {
@@ -353,11 +378,14 @@ function turnOnSocket() {
             playerColor = msg[0];
             matchRoom = msg[1]
             single = false
+            optionsContainer.classList.add('hide');
+            searchFriendDiv.classList.remove('hide') 
             startGame(playerColor)
         })
 
 
         socket.on('new move', changeMove) 
+
     }
 }
 
@@ -371,7 +399,6 @@ function clearBoard() {
 }
 
 function startGame(msg) {
-    single = false;
     while (boardContainer.firstChild) {
         boardContainer.firstChild.remove()
     } 
@@ -391,9 +418,6 @@ function startGame(msg) {
         addCheckerPiecesBlack() 
         
     }
-    console.log(gameBoard)
-    console.log(boardSpots)
-    console.log(pieces)
     highlight()
     dragDrop()
     newTurn()
@@ -473,7 +497,6 @@ class checker {
         checkerPiece.dataset.forceMove4 = 'false'
         checkerPiece.dataset.doubleJump = 'false'
 
-        checkerPiece.setAttribute('draggable', 'true')
         checkerPiece.style.zIndex = 999
         pieces.push(checkerPiece)
 
@@ -978,7 +1001,9 @@ function resetForcedData(piece) {
 
 function setDraggable(piece) {
     if (checkAllForceBool() === false){
+        if (playerColor == playerTurn) {
         piece.setAttribute('draggable', 'true')
+        }
     }
     else if (checkAllForceBool()) {
         if (checkAllForceData(piece)) {
@@ -1065,8 +1090,7 @@ function newTurn() {
     }
     winCondition()
     finishGame() 
-    //console.log(pieces)
-    console.log(playerTurn)
+    selection = ""
     return jumpBool
 }
 
@@ -1087,8 +1111,9 @@ function removePossibleMoves() {
     possibleMoves.forEach(move => {
         move.parentNode.removeChild(move)
     })
-
+        
 }
+
 
 
 function resetPieceColor(selection) {
@@ -1107,7 +1132,6 @@ function highlightPiece(selection) {
 function takePiece(dropTarget, spot, takenPiece, dragTarget) {
     if (dropTarget === spot) {
         if (takenPiece != '') {
-            console.log(takenPiece)
             pieces.splice(pieces.indexOf(takenPiece.lastChild),1)
             takenPiece.removeChild(takenPiece.lastChild)
             takenPiece.classList.remove('occupied')
@@ -1121,8 +1145,6 @@ function takePiece(dropTarget, spot, takenPiece, dragTarget) {
 function dropPiece(dragTarget, dropTarget, spot, takenPiece) {
     originalSquare = dragTarget.parentNode
     if (dropTarget === spot) {
-        removePossibleMoves()
-
         dragTarget.parentNode.removeChild(dragTarget)
         
         originalSquare.classList.remove('occupied')
@@ -1138,6 +1160,8 @@ function dropPiece(dragTarget, dropTarget, spot, takenPiece) {
         createKing(dragTarget, dropTarget)
         movedPiece = dragTarget.dataset.starterSpot //`${dragTarget.dataset.column}${dragTarget.dataset.row}`
         droppedSpot = dropTarget.id
+
+        removePossibleMoves()
 
         
         moveData = {
@@ -1199,21 +1223,20 @@ function changeMove(message) {
 function createClickablePossibleMoves(selection) {
     const possibleMoves1 = document.querySelectorAll('.possibleMove')
     possibleMoves1.forEach(move => {
-        console.log('created clickable possible move')
         move.addEventListener('mousedown', (e) => { 
             dropPiece(selection, e.target.parentNode, forwardRight, takenPieceForwR)
             dropPiece(selection, e.target.parentNode, forwardLeft, takenPieceForwL)
             dropPiece(selection, e.target.parentNode, backRight, takenPieceBackR)
             dropPiece(selection, e.target.parentNode, backLeft, takenPieceBackL)
-            console.log('clicked possible move!!!!')
         })
-    })
+    })      
 }
 
 function possibleMovesPointers(foo) {
     const possibleMoves2 = document.querySelectorAll('.possibleMove')
     possibleMoves2.forEach(move => {
         move.style.pointerEvents = foo
+        console.log(foo)
     })
     
 }
@@ -1222,7 +1245,6 @@ function possibleMovesPointers(foo) {
 function highlight() {
     pieces.forEach(element => {
         let clicked
-        let selection
         element.setAttribute('tabindex', '0')
 
         element.addEventListener('blur', (e) => {
@@ -1321,7 +1343,14 @@ function highlight() {
         
         gameBoard.forEach(spot => {
             spot.addEventListener('mousedown', (e) => {
-                if (e.target != currentPiece && (!spot.classList.contains('possibleMove'))) {
+                if (!(spot.classList.contains('occupied')) && !(spot.classList.contains('checkerPiece')) && playerTurn == selection.dataset.side) { 
+                    dropPiece(selection, spot, forwardRight, takenPieceForwR)
+                    dropPiece(selection, spot, forwardLeft, takenPieceForwL)
+                    dropPiece(selection, spot, backRight, takenPieceBackR )
+                    dropPiece(selection, spot, backLeft, takenPieceBackL)
+                    removePossibleMoves()  
+                }
+                else if (e.target != currentPiece) {
                     removePossibleMoves()
                 }
             })
@@ -1374,7 +1403,7 @@ function dragDrop() {
             if (checkAllForceData(dragTarget)) {
                 dragTarget.style.boxShadow = '0px 0px 4px 5px rgba(225, 245, 3, 0.75)'
             }
-            possibleMovesPointers('default')
+            possibleMovesPointers('auto')
 
         })
 
@@ -1429,9 +1458,7 @@ selectColor.addEventListener('change', (e) => {
         addCheckerPiecesBlack() 
         
     }
-    console.log(gameBoard)
-    console.log(boardSpots)
-    console.log(pieces)
+
     highlight()
     dragDrop()
     newTurn()
@@ -1440,17 +1467,13 @@ selectColor.addEventListener('change', (e) => {
 
 
 function winCondition() {
-    //let counter = pieces.length
-    //console.log(counter)
     let whiteCount = 0
     let blackCount = 0
     pieces.forEach(element => {
-        //console.log(counter)
         if (element.classList.contains('white')) {whiteCount += 1;} //counter -= 1}
         if (element.classList.contains('black')) {blackCount += 1;}// counter -= 1}  
     })
 
-    //if (counter === 0) {
         if (whiteCount == 0) {
             blackWins = true
             playerTurn = ''
@@ -1463,7 +1486,7 @@ function winCondition() {
             winnerText.textContent = 'The winner is White!'
             return whiteWins
         } 
-    //}   
+
 }
 
 function finishGame() {
