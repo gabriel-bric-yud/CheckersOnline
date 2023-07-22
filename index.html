@@ -18,22 +18,32 @@
             <a href = 'https://checkersonline.azurewebsites.net/'>CHECKERS ONLINE</a>
         </div>
 
+        <div id = "gameContainer">
         <div id="boardContainer">
-            <div id = 'winnerBoard' class = 'hide'>
+            
+        </div>   
+            <div id = 'winnerBoard' class = 'hide' >
                 <h3 id = 'winnerText'></h3>
                 <p id = "restart">Rematch?</p>
                 <div style = "display: flex;">
                     <button type = "button" id = "accept3" class = 'matchButton'>Accept &#10004</button>
                     <button type = "button" id = "reject3" class = 'matchButton'>Reject &#10006</button>
                 </div>
-            </div>   
+            </div>
+            <div id = "enemyDisconnected" class = 'hide'>
+                <p id = "disconnectText" style = 'text-decoration-line: underline;'></p>
+                <div style = "display: flex; ">
+                <!--<button type = "button" id = "wait" class = 'matchButton'>Wait &#9983</button>-->
+                <button type = "button" id = "close2" class = 'matchButton'>End &#10006</button>
+                </div>
+            </div>
         </div>
 
         <div id = "userInterface">
             
             <div id = "createAccountUI">
                 <form id = 'userCreate'>
-                    <input type = "text" id = "name" name = "name" maxlength="17">
+                    <input type = "text" id = "name" name = "name" maxlength="14">
                     <input type = "submit" id = "createUser" value = "Create Username">
                 </form>
             </div>
@@ -48,7 +58,7 @@
                 </div>
                 <div id ="searchFriendDiv">
                     <form id = 'searchFriendForm'>
-                        <input type = "text" id = "friend" name = "friend" maxlength="17">
+                        <input type = "text" id = "friend" name = "friend" maxlength="14">
                         <input type = "submit" id = "searchUser" value = "Send Invite" style = "border-radius: 20px;">
                     </form>
                 </div>
@@ -87,18 +97,11 @@
                 <button type = "button" id = "close" class = 'matchButton'>Close &#10006</button>
             </div>
 
-            <div id = "enemyDisconnected" class = "hide">
-                <p id = "disconnectText" style = 'text-decoration-line: underline;'>e</p>
-                <button type = "button" id = "close2" class = 'matchButton'>Close &#10006</button>
-            </div>
-
+            
         </div>
          
         
     </div>
-    
-
-
 
 
     <script src="checkersM.js"></script>
