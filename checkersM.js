@@ -108,7 +108,7 @@ const winnerText = document.getElementById('winnerText')
 const winnerDiv = document.querySelector('#winnerBoard')
 const restartText = document.querySelector('#restart')
 const acceptRematch = document.getElementById('accept');
-const rejecttRematch = document.getElementById('reject');
+const rejectRematch = document.getElementById('reject');
 
 
 //const waitButton = document.getElementById('wait')
