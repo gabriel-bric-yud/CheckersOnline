@@ -1,10 +1,7 @@
-const boardContainer = document.getElementById('boardContainer');
 let selection
 let gameBoard = []
 const squareSize = '40px'
 const pieceSize = '30px'
-
-
 
 const darkSquare = 'indigo' //'transparent'//'black'//'darkolivegreen' //'indigo'
 const lightSquare = 'lightgrey' //'transparent'//'lightgoldenrodyellow'//'lightgoldenrodyellow' //'lightgrey'
@@ -57,10 +54,6 @@ let matchRoom
 
 let clickSelection
 
-
-
-const starterDiv = document.querySelector('.starterDiv')
-
 const darkTexture = new Image()
 darkTexture.src = '/imgs/darkwood texture.jpg'
 
@@ -88,6 +81,11 @@ let user
 let possibleFriend
 let friend
 
+const titleDiv = document.querySelector('.titleDiv')
+const gameContainer = document.getElementById('gameContainer')
+const boardContainer = document.getElementById('boardContainer');
+const userInterfaceDiv = document.getElementById('userInterface')
+
 const createAccountUI = document.querySelector('#createAccountUI')
 const userCreate = document.querySelector('#userCreate')
 const userName = document.querySelector('#name')
@@ -105,51 +103,47 @@ const searchFriendForm = document.getElementById('searchFriendForm');
 const searchFriendDiv = document.getElementById('searchFriendDiv');
 const friendName = document.getElementById('friend')
 
-const matchRequest = document.getElementById('matchRequest');
-const requestText = document.getElementById('request')
-const accept = document.getElementById('accept');
-const reject = document.getElementById('reject');
-
-
-const inviteFriend = document.getElementById('invitePlayer')
-const accept2 = document.getElementById('accept2');
-const reject2 = document.getElementById('reject2');
-const inviteText = document.getElementById('inviteText')
 
 const winnerText = document.getElementById('winnerText')
 const winnerDiv = document.querySelector('#winnerBoard')
 const restartText = document.querySelector('#restart')
-const accept3 = document.getElementById('accept3');
-const reject3 = document.getElementById('reject3');
-
-const matchAnswer = document.getElementById('matchAnswer');
-const answerText = document.getElementById('answer')
-const closeButton = document.getElementById('close')
-
-const enemyDisconnected = document.getElementById('enemyDisconnected');
-const disconnectText = document.getElementById('disconnectText')
-const closeButton2 = document.getElementById('close2')
-const waitButton = document.getElementById('wait')
+const acceptRematch = document.getElementById('accept');
+const rejecttRematch = document.getElementById('reject');
 
 
-const notOnline = document.getElementById('notOnline');
-const notOnlineText = document.getElementById('notOnlineText')
-const closeButton3 = document.getElementById('close3')
+//const waitButton = document.getElementById('wait')
 
 const playersOnline = document.getElementById('playersOnline')
-const players = document.getElementById('players')
 
-function showOnline() {
+
+
+acceptRematch.addEventListener('click', (e) => {
+    winnerDiv.classList.add('hide');
+    playerColor == 'black' ? playerColor = 'white' : playerColor = 'black';
+    if (single == false) {socket.emit('accept rematch', [friend, user, playerColor])}
+    startGame(playerColor)
+
+})
+
+rejectRematch.addEventListener('click', (e) => {
+    clearBoard()
+    winnerDiv.classList.add('hide');
+    socket.emit("disconnect friend", [friend, user]);
+    friend = ""
+    
+})
+
+function createOnlinePlayersDropdown() {
     const dropDown =  document.getElementById('myDropdown');
-    dropDown.classList.toggle("show1");
+    dropDown.classList.toggle("show");
     const dropDownBtn = document.querySelector('.dropdownBtn');
     dropDownBtn.classList.toggle("clicked");
 
     window.onclick = function stopShow(event) {
         if (!event.target.matches('.dropdownBtn')) {
             const dropdowns = document.querySelector('.dropdownContent');
-            if (dropdowns.classList.contains('show1')) {
-                dropdowns.classList.remove('show1')
+            if (dropdowns.classList.contains('show')) {
+                dropdowns.classList.remove('show')
             }
         }
     }
@@ -161,13 +155,13 @@ function showOnlineUsers(msg) {
         playersOnline.firstChild.remove()
     }
 
-    let showHide = document.createElement('button');
-    showHide.setAttribute('id', 'showHide')
-    showHide.setAttribute('class', 'dropdownBtn')
+    let showPlayers = document.createElement('button');
+    showPlayers.setAttribute('id', 'showPlayers')
+    showPlayers.setAttribute('class', 'dropdownBtn')
     let playerCount = msg.length - 1
     if (playerCount <= 0) {playerCount = 0}
-    showHide.innerHTML = `${playerCount} Players Online: &#9776`
-    playersOnline.appendChild(showHide)
+    showPlayers.innerHTML = `${playerCount} Players Online: &#9776`
+    playersOnline.appendChild(showPlayers)
 
 
     const myDropdown = document.createElement('div')
@@ -182,38 +176,30 @@ function showOnlineUsers(msg) {
             newPlayer.textContent = player;
             myDropdown.appendChild(newPlayer)
             newPlayer.addEventListener('mousedown', (msg) => {
-                inviteText.textContent = `Send match invite to ${player}?`
-                inviteFriend.classList.remove('hide');
                 clickSelection = player
+                createRequestNotification(msg, `Send match request to ${clickSelection}?`, userInterfaceDiv, 'Send &#10004', 'Cancel &#10006', 'send', 'cancel')
             }) 
         }
     }
 
     playersOnline.appendChild(myDropdown)
 
-    showHide.addEventListener('click', (e) => {
-        showOnline()
+    showPlayers.addEventListener('click', (e) => {
+        createOnlinePlayersDropdown()
     })
 }
 
 function createNewUser(userN) {
+    friend = ""
     if (userN != "" && userN.length <= 14) {
         socket = io()
         user = userN.toLowerCase()
         turnOnSocket()
         socket.emit("create user", user)
     }
-    else {alert('Username is too long.')}
+    else {alert('Invalid')}
     userN = ""
 }
-
-function searchNewFriend(userN) {
-    if (userN != "") {
-        possibleFriend = userN.toLowerCase()
-        socket.emit("search friend", [user, possibleFriend, 'black'])     
-    }
-}
-
 
 userCreate.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -221,15 +207,22 @@ userCreate.addEventListener('submit', (e) => {
 })
 
 
+function searchNewFriend(friendN) {
+    if (friendN != "") {
+        possibleFriend = friendN.toLowerCase()
+        socket.emit("search friend", [user, possibleFriend, 'black'])     
+    }
+}
+
+
+
 singlePlayer.addEventListener('click', (e) => {
     socket.emit("disconnect friend", [friend, user]);
-    possibleFriend = ""
     friend = ""
     clearBoard()
     searchFriendDiv.classList.add('hide')
     optionsContainer.classList.remove('hide')
     single = true
-    console.log('hello')
 })
 
 multiPlayer.addEventListener('click', (e) => {
@@ -243,89 +236,109 @@ searchFriendForm.addEventListener('submit', (e) => {
     friendName.value = ""
 })
 
-accept.addEventListener('click', (e) => {
+
+function acceptMatch(msg) {
     socket.emit("disconnect friend", [friend, user]);
-    friend = possibleFriend;
+    friend = msg[0];
     playerColor = 'white'
     socket.emit('accept match', [friend, user, 'black'])
     matchRoom = `${friend}+${user}`
-    matchRequest.classList.add('hide');
     optionsContainer.classList.add('hide');
     searchFriendDiv.classList.remove('hide') 
     single = false
     startGame(playerColor)
-})
+}
 
-reject.addEventListener('click', (e) => {
+function rejectMatch() {
     socket.emit('reject match', [possibleFriend, user, `${user} has rejected your match` ])
-    matchRequest.classList.add('hide');
-})
+}
 
-accept2.addEventListener('click', (e) => {
+function sendInvite() {
     searchNewFriend(clickSelection)
-    invitePlayer.classList.add('hide');
-})
-
-reject2.addEventListener('click', (e) => {
-    invitePlayer.classList.add('hide');
-    inviteText.textContent = ''
-})
-
-accept3.addEventListener('click', (e) => {
-    winnerDiv.classList.add('hide');
-    if (single == false) {socket.emit('accept match', [friend, user, playerColor])}
-    else {
-        startGame(playerColor)
-    }
-})
-
-reject3.addEventListener('click', (e) => {
-    clearBoard()
-    winnerDiv.classList.add('hide');
-    socket.emit("disconnect friend", [friend, user]);
-    possibleFriend = ""
-    friend = ""
-    
-})
-
-closeButton.addEventListener('click', (e) => {
-    matchAnswer.classList.add('hide');
-})
-
-closeButton2.addEventListener('click', (e) => {
-    enemyDisconnected.classList.add('hide')
-})
+}
 
 /** 
+function acceptRematch() {
+    if (single == false) {socket.emit('accept rematch', [friend, user, playerColor])}
+    startGame(playerColor)
+
+}
+
+function rejectRematch() {
+    clearBoard()
+    socket.emit("disconnect friend", [friend, user]);
+    friend = ""
+}
+
 waitButton.addEventListener('click', (e) => {
     enemyDisconnected.classList.add('hide')
 })
 
 */
 
+function createErrorNotification(msg, parent) {
+    const messageDiv = document.createElement('div')
+    messageDiv.classList.add('errorMessage')
+    const messageText = document.createElement('p')
+    messageText.textContent = msg
+    messageText.classList.add('errorMessageText')
+    messageDiv.appendChild(messageText)
+    const closeBtn = document.createElement('button')
+    closeBtn.classList.add('matchButton')
+    closeBtn.innerHTML = 'Close &#10006'
+    messageDiv.appendChild(closeBtn)
+    parent.appendChild(messageDiv)
 
-closeButton3.addEventListener('click', (e) => {
-    notOnline.classList.add('hide')
-})
+    closeBtn.addEventListener('click', (e) => { 
+        messageDiv.remove()
+    })
+}
 
+function createRequestNotification(msg, msgText, parent, acceptText, rejectText, acceptAction, rejectAction) {
+    const messageDiv = document.createElement('div')
+    messageDiv.classList.add('requestMessage')
+    const messageText = document.createElement('p')
+    messageText.textContent = msgText
+    messageText.classList.add('requestMessageText')
+    messageDiv.appendChild(messageText)
 
+    const btnDiv = document.createElement('div')
+    btnDiv.style.display = 'flex';
+    const acceptBtn = document.createElement('button')
+    acceptBtn.classList.add('matchButton')
+    acceptBtn.innerHTML = acceptText
+    const closeBtn = document.createElement('button')
+    closeBtn.classList.add('matchButton')
+    closeBtn.innerHTML = rejectText
+
+    btnDiv.appendChild(acceptBtn)
+    btnDiv.appendChild(closeBtn)
+    
+    messageDiv.appendChild(btnDiv)
+
+    parent.appendChild(messageDiv)
+
+    acceptBtn.addEventListener('click', (e) => {
+        if (acceptAction == 'send') {
+            sendInvite()
+        }
+        else if (acceptAction == "accept") {
+            acceptMatch(msg)
+        }
+        messageDiv.remove()
+    })
+
+    closeBtn.addEventListener('click', (e) => {
+        if (rejectAction == 'reject') {
+            rejectMatch()
+        }
+        messageDiv.remove()
+    })
+}
 
 
 function turnOnSocket() {
     if (socket != null) {
-
-        document.addEventListener('visibilitychange', (e) => {
-            if (document.hidden) {
-                socket.emit('page visibility', 'hidden')
-            }
-            else {
-                possibleFriend = ""
-                friend = ""
-                clearBoard()
-                createNewUser(userN)
-            }
-        })
-        
         socket.on('valid user', (msg) => {
             createAccountUI.classList.add('hide');
             setUp.classList.remove('hide')
@@ -333,8 +346,7 @@ function turnOnSocket() {
         })
         
         socket.on('not valid', (msg) => {
-            notOnlineText.textContent = msg
-            notOnline.classList.remove('hide');
+            createErrorNotification(msg, userInterfaceDiv)
             socket.emit("disconnect function", (msg))
             socket = null
         })
@@ -342,8 +354,7 @@ function turnOnSocket() {
         socket.on('players online', (msg) => {showOnlineUsers(msg)})
 
         socket.on('not online', (msg) => {
-            notOnlineText.textContent = msg
-            notOnline.classList.remove('hide');
+            createErrorNotification(msg, userInterfaceDiv)
         })
 
         socket.on('friend found', (msg) => {
@@ -352,31 +363,26 @@ function turnOnSocket() {
 
         socket.on('request match', (msg) => {
             possibleFriend = msg[0]
-            requestText.textContent = msg[2]
-            matchRequest.classList.remove('hide');
+            createRequestNotification(msg, msg[2], userInterfaceDiv, 'Accept &#10004', 'Reject &#10006', 'accept', 'reject')
         })
 
 
         socket.on('reject match', (msg) => {
-            answerText.textContent = msg[2]
-            matchAnswer.classList.remove('hide')
-            console.log(msg)
+            createErrorNotification(msg, userInterfaceDiv)
         })
 
         socket.on('disconnect friend', (msg) => {
             friend = ""
-            possibleFriend = ""
             clearBoard()
-            disconnectText.textContent = msg[1]
-            enemyDisconnected.classList.remove('hide');
+            createErrorNotification(msg, gameContainer)
             socket.emit('disconnect accepted', (msg))
         })
 
 
-
         socket.on('player color', (msg) => {
-            socket.emit("game start", ([possibleFriend, user]))
-            friend = possibleFriend;
+            socket.emit("disconnect friend", [friend, user]);
+            friend = msg[1];
+            socket.emit("game start", ([friend, user]))
             playerColor = msg[0];
             matchRoom = msg[1]
             single = false
@@ -385,6 +391,16 @@ function turnOnSocket() {
             startGame(playerColor)
         })
 
+        socket.on('accept rematch', (msg) => {
+            winnerDiv.classList.add('hide');
+            socket.emit("game start", ([friend, user]))
+            playerColor = msg[0];
+            matchRoom = msg[1]
+            single = false
+            optionsContainer.classList.add('hide');
+            searchFriendDiv.classList.remove('hide') 
+            startGame(playerColor)
+        })
 
         socket.on('new move', changeMove) 
 
@@ -429,11 +445,8 @@ function startGame(msg) {
 
 
 
-function myFunction() {
-    document.getElementById("singlePlayer").style.animation = "mynewmove 4s 2";
-    playerButtons.forEach(elem => {
+function myFunction(elem) {
         elem.style.webkitAnimation = "mynewmove 3s 1"
-    })
 }
 
 
@@ -1186,7 +1199,6 @@ function dropPiece(dragTarget, dropTarget, spot, takenPiece) {
 
 function dropEnemyPiece(dragTarget, dropTarget, spot, takenPiece) {
     originalSquare = dragTarget.parentNode
-    console.log('drop enemy piece: ', dragTarget, dropTarget, spot, takenPiece)
     if (dropTarget === spot) {
         removePossibleMoves()
 
@@ -1217,7 +1229,6 @@ function changeMove(message) {
     let dropTarget1 = document.getElementById(message.drop);
     let spot1 = document.getElementById(message.spot);
     let takenPiece1 = document.getElementById(message.taken)
-    console.log('change move: ', dragTarget1, dropTarget1, spot1, takenPiece1)
     dropEnemyPiece(dragTarget1, dropTarget1, spot1, takenPiece1)
 }
 
@@ -1238,7 +1249,6 @@ function possibleMovesPointers(foo) {
     const possibleMoves2 = document.querySelectorAll('.possibleMove')
     possibleMoves2.forEach(move => {
         move.style.pointerEvents = foo
-        console.log(foo)
     })
     
 }
@@ -1345,7 +1355,7 @@ function highlight() {
         
         gameBoard.forEach(spot => {
             spot.addEventListener('mousedown', (e) => {
-                if (!(spot.classList.contains('occupied')) && !(spot.classList.contains('checkerPiece')) && playerTurn == selection.dataset.side) { 
+                if (!(spot.classList.contains('occupied')) && !(spot.classList.contains('checkerPiece'))) { 
                     dropPiece(selection, spot, forwardRight, takenPieceForwR)
                     dropPiece(selection, spot, forwardLeft, takenPieceForwL)
                     dropPiece(selection, spot, backRight, takenPieceBackR )
