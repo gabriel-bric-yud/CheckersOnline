@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 
-<head lang="en" dir="ltr">
+<html lang="en-us">
+<head>
     <title>Checkers Online</title>
     <meta charset = "UTF-8">
     <meta name = "viewport" content = "width = device-width">
@@ -14,29 +15,23 @@
 <body>
     
     <div class = 'mainContainer'>
-        <div class = 'starterBoard'>
+        <div class = 'titleDiv'>
             <a href = 'https://checkersonline.azurewebsites.net/'>CHECKERS ONLINE</a>
         </div>
 
         <div id = "gameContainer">
-        <div id="boardContainer">
-            
-        </div>   
+            <div id="boardContainer">    
+            </div>
+
             <div id = 'winnerBoard' class = 'hide' >
                 <h3 id = 'winnerText'></h3>
                 <p id = "restart">Rematch?</p>
                 <div style = "display: flex;">
-                    <button type = "button" id = "accept3" class = 'matchButton'>Accept &#10004</button>
-                    <button type = "button" id = "reject3" class = 'matchButton'>Reject &#10006</button>
+                    <button type = "button" id = "accept" class = 'matchButton'>Accept &#10004</button>
+                    <button type = "button" id = "reject" class = 'matchButton'>Reject &#10006</button>
                 </div>
             </div>
-            <div id = "enemyDisconnected" class = 'hide'>
-                <p id = "disconnectText" style = 'text-decoration-line: underline;'></p>
-                <div style = "display: flex; ">
-                <!--<button type = "button" id = "wait" class = 'matchButton'>Wait &#9983</button>-->
-                <button type = "button" id = "close2" class = 'matchButton'>End &#10006</button>
-                </div>
-            </div>
+
         </div>
 
         <div id = "userInterface">
@@ -62,8 +57,6 @@
                         <input type = "submit" id = "searchUser" value = "Send Invite" style = "border-radius: 20px;">
                     </form>
                 </div>
-                <div id = 'playersOnline'>
-                </div>
             </div>
     
             <div id = "setUp" class = "hide">
@@ -71,38 +64,9 @@
                 <button id = 'multiPlayer' class = 'playerButton' type="button">Two Player</button>
             </div>
 
-            <div id = "notOnline" class = "hide">
-                <p id = "notOnlineText"></p>
-                <button type = "button" id = "close3" class = 'matchButton'>Close &#10006</button>
-            </div>
-
-            <div id = "matchRequest" class = "hide">
-                <p id = "request" style = 'text-decoration-line: underline;'></p>
-                <div style = "display: flex;">
-                <button type = "button" id = "accept" class = 'matchButton'>Accept &#10004</button>
-                <button type = "button" id = "reject" class = 'matchButton'>Reject &#10006</button>
-                </div>
-            </div>
-
-            <div id = "invitePlayer" class = "hide">
-                <p id = "inviteText" style = 'text-decoration-line: underline;'></p>
-                <div style = "display: flex; ">
-                <button type = "button" id = "accept2" class = 'matchButton'>Send &#10004</button>
-                <button type = "button" id = "reject2" class = 'matchButton'>Cancel &#10006</button>
-                </div>
-            </div>
-
-            <div id = "matchAnswer" class = "hide">
-                <p id = "answer" style = 'text-decoration-line: underline;'></p>
-                <button type = "button" id = "close" class = 'matchButton'>Close &#10006</button>
-            </div>
-
-            
-        </div>
-         
-        
+        </div>     
     </div>
-
 
     <script src="checkersM.js"></script>
 </body>
+</html>
