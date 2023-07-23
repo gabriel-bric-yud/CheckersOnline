@@ -88,10 +88,9 @@ io.on('connection', async (socket) =>{
             createUser(socket, msg)
         }
         else {
-            io.to(socket.id).emit('not valid', 'username is already taken')
+            io.to(socket.id).emit('not valid', 'Username is already taken. Sorry!')
         }
     })
-
 
 
     socket.on("search friend", (msg) => {
@@ -101,25 +100,28 @@ io.on('connection', async (socket) =>{
                 io.to(msg[1]).emit('request match', [ msg[0], msg[1], `${msg[0]} invited you to a match!`,]);
             }
             else {
-                io.to(msg[0]).emit('not online', 'sorry friend not online')
+                io.to(msg[0]).emit('not online', `${msg[1]} is not online. Sorry!`)
             }
         }
         else {
-            io.to(msg[0]).emit('not online', 'sorry friend not online')
+            io.to(msg[0]).emit('not online', `Error! That's your username!`)
         }
     })
 
     socket.on('accept match', (msg) => {
-        //createMatch(socket, msg)
         socket.data.enemy = msg[0]
         console.log(`${socket.data.user} is now playing ${socket.data.enemy}`)
-        io.to(msg[0]).emit('player color', [msg[2], `${msg[0]}+${msg[1]}`] )
-        //io.in(msg[0]).socketsJoin([msg[1]])
-        //io.in(msg[1]).socketsJoin([msg[0]])
+        io.to(msg[0]).emit('player color', [msg[2], msg[1]] )
+    })
+
+    socket.on('accept rematch', (msg) => {
+        socket.data.enemy = msg[0]
+        console.log(`${socket.data.user} is now playing ${socket.data.enemy}`)
+        io.to(msg[0]).emit('accept rematch', [msg[2], `${msg[0]}+${msg[1]}`] )
     })
 
     socket.on('reject match', (msg) => {
-        io.to(msg[0]).emit('reject match', msg)
+        io.to(msg[0]).emit('reject match', msg[2])
     })
 
     const userId = await fetchUserId(socket);
@@ -135,17 +137,10 @@ io.on('connection', async (socket) =>{
     socket.on('new move', (msg) => {
         console.log(msg)
         io.to(msg.enemy).emit('new move', msg)
-        //io.to(msg.match).emit('new move', msg)
     })
-
-    socket.on('page visibility', (msg) => {
-        socket.data.visibility = msg
-        console.log('page visibility change on ' + socket.data.user)
-    })
-
 
     socket.on('disconnect friend', (msg) => {
-        io.to(msg[0]).emit("disconnect friend", [msg[1], `${msg[1]} has disconnected`])
+        io.to(msg[0]).emit("disconnect friend",`${msg[1]} has disconnected`)
     })
 
     socket.on('disconnect function', (msg) => {
@@ -158,7 +153,7 @@ io.on('connection', async (socket) =>{
 
     socket.on('disconnect', () => {
         console.log('user disconnected')
-        io.to(socket.data.enemy).emit("disconnect friend", [socket.data.user, `${socket.data.user} has disconnected`])
+        io.to(socket.data.enemy).emit("disconnect friend", `${socket.data.user} has disconnected`)
         console.log('bye ' + socket.data.user);
         removeRoom(socket.data.user)
         socket.broadcast.emit('players online', roomArray)
