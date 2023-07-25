@@ -38,7 +38,10 @@ body {
     display: grid;
     justify-content: center;
     justify-self: center;
+    align-content: center;
     position: relative;
+    text-align: center;
+    width: 100%;
 }
 
 #boardContainer {
@@ -77,14 +80,13 @@ body {
 }
 
 #winnerBoard {
-    display: grid;
+    position: absolute;
     background-color: black;
     width: fit-content;
     border-radius: 5px;
     color: white;
     border: 5px ridge #00A856;
     margin: 0 auto;
-    position: absolute;
     text-align: center;
     align-self: center;
     justify-self: center;
@@ -156,9 +158,6 @@ body {
     position: absolute;
 }
 
-.show {
-    display: grid !important;
-}
 
 .hide {
     display: none !important;
@@ -168,29 +167,42 @@ body {
     z-index: 1004;
 }
 
-
 #userInterface {
+    display: grid;
     position: relative;
     text-align: center;
     justify-content: center;
     margin: 0 auto;
-    display: grid;
     background-color: #00A856;
     width: 340px;
     height: 180px;
     border-radius: 10px;
 }
 
+#userCreate {
+    display: flex;
+    margin: 10px auto; 
+    justify-content: space-evenly; 
+    text-align: center;
+}
+
+#name {
+    width: 48%;
+}
+
+#createUser {
+    padding: 0px;
+    text-align: center;
+    width: 44%;
+    cursor: pointer;
+}
+
 #createAccountUI {
-    padding: 5px 0;
+    padding: px 0;
     text-align: center;
     margin: 5px auto;
     height: fit-content;
     width: fit-content;
-}
-
-#createUser {
-    cursor: pointer;
 }
 
 #searchUI {
@@ -223,7 +235,18 @@ body {
 }
 
 
-#matchRequest, #matchAnswer, #enemyDisconnected, #notOnline, #invitePlayer {
+#errorMessage, #requestMessage {
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    justify-self: center;
+    align-self: center;
+    box-sizing: border-box;
+    margin: 0 auto;
+
+}
+
+.errorMessage, .requestMessage {
     position: absolute;
     text-align: center;
     justify-content: center;
@@ -236,16 +259,15 @@ body {
     width: max-content;
     height: fit-content;
     z-index: 1005;
+    margin: 0 auto;
 }
 
-#matchRequest, #invitePlayer {
+.requestMessage {
     border: 10px ridge #47F5A1;
-    border-radius: 20px;
 }
 
-#matchAnswer, #enemyDisconnected, #notOnline {
+.errorMessage {
     border: 5px ridge #F55C47;
-    border-radius: 20px;
 }
 
 .matchButton {
@@ -256,24 +278,6 @@ body {
     margin: 5px auto;
     position: relative;
     border-radius: 10px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #ddd;
-
-}
-
-#playersOnline {
-    display: inline-block;
-    position: relative;
-    padding: 0px;
-    justify-items: center;
-    text-align: center;
-    margin: 10px auto;
-    width: fit-content;
-    z-index: 1003;
-    box-sizing: border-box;
     cursor: pointer;
 }
 
@@ -294,6 +298,20 @@ button:hover {
     width: 100%;
     z-index: 1004;
     height: 2ch;
+}
+
+
+#playersOnline {
+    display: inline-block;
+    position: relative;
+    padding: 0px;
+    justify-items: center;
+    text-align: center;
+    margin: 10px auto;
+    width: fit-content;
+    z-index: 1003;
+    box-sizing: border-box;
+    cursor: pointer;
 }
 
 .dropdownBtn {
@@ -317,7 +335,7 @@ button:hover {
 .dropdownContent a {
     display: block;
     color: black;
-    padding: 10px;
+    padding: 4px;
     text-decoration: none;
     border: 1px solid black;
     text-align: center;
@@ -327,17 +345,20 @@ button:hover {
     background-color: #ddd;
 }
 
-.show1 {
+.show {
     display: block;
 }
 
+button:hover {
+    background-color: #ddd;
+}
 
 @keyframes mynewmove {
     from {top: 0px;}
-    to {top: 325px;}
+    to {top: 400px;}
 }
 
-.starterBoard {
+.titleDiv {
     display: grid;
     width: fit-content;
     margin: 0px auto;
@@ -348,8 +369,8 @@ button:hover {
     z-index: 1000;
 }
 
-.starterBoard a {
+.titleDiv a {
     margin: 0 auto;
     font-family: 'Bungee Spice', cursive;
-    font-size: 1.7em ;
+    font-size: 1.9em ;
 }
