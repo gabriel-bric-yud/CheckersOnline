@@ -344,6 +344,7 @@ button:hover {
 
 .errorMessage, .requestMessage, .winnerBoard {
     position: absolute;
+    display: block;
     text-align: center;
     justify-content: center;
     justify-self: center;
