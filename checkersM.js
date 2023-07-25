@@ -119,8 +119,8 @@ const playersOnline = document.getElementById('playersOnline')
 
 acceptRematch.addEventListener('click', (e) => {
     winnerDiv.classList.add('hide');
-    playerColor == 'black' ? playerColor = 'white' : playerColor = 'black';
     if (single == false) {socket.emit('accept rematch', [friend, user, playerColor])}
+    playerColor == 'black' ? playerColor = 'white' : playerColor = 'black';
     startGame(playerColor)
 
 })
@@ -249,8 +249,8 @@ function acceptMatch(msg) {
     startGame(playerColor)
 }
 
-function rejectMatch() {
-    socket.emit('reject match', [possibleFriend, user, `${user} has rejected your match` ])
+function rejectMatch(msg) {
+    socket.emit('reject match', [msg[0], user, `${user} has rejected your match` ])
 }
 
 function sendInvite() {
@@ -330,7 +330,7 @@ function createRequestNotification(msg, msgText, parent, acceptText, rejectText,
 
     closeBtn.addEventListener('click', (e) => {
         if (rejectAction == 'reject') {
-            rejectMatch()
+            rejectMatch(msg)
         }
         messageDiv.remove()
     })
@@ -362,7 +362,6 @@ function turnOnSocket() {
         })
 
         socket.on('request match', (msg) => {
-            possibleFriend = msg[0]
             createRequestNotification(msg, msg[2], userInterfaceDiv, 'Accept &#10004', 'Reject &#10006', 'accept', 'reject')
         })
 
