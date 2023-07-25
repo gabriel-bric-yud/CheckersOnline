@@ -88,7 +88,7 @@ const userInterfaceDiv = document.getElementById('userInterface')
 
 const createAccountUI = document.querySelector('#createAccountUI')
 const userCreate = document.querySelector('#userCreate')
-const userName = document.querySelector('#name')
+const userName = document.querySelector('#nameValue')
 
 const setUp = document.querySelector('#setUp')
 const singlePlayer = document.getElementById('singlePlayer');
@@ -303,7 +303,9 @@ function createRequestNotification(msg, msgText, parent, acceptText, rejectText,
     messageDiv.appendChild(messageText)
 
     const btnDiv = document.createElement('div')
-    btnDiv.style.display = 'flex';
+    btnDiv.setAttribute('class', 'btnDiv')
+    //btnDiv.style.display = 'flex';
+    //btnDiv.style.gridTemplateColumns = '1fr 1fr'
     const acceptBtn = document.createElement('button')
     acceptBtn.classList.add('matchButton')
     acceptBtn.innerHTML = acceptText
@@ -971,8 +973,6 @@ function createKing(piece, dropTarget) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-    
         
 function resetMoveVariables() {
     backRight = ''
