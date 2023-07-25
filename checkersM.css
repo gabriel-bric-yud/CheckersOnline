@@ -5,6 +5,7 @@ body {
     width: 100%;
     margin: 0 auto;
     justify-content: center;
+    position: relative;
 }
 
 @media only screen and (hover: none) and (pointer: coarse) {
@@ -29,6 +30,7 @@ input {
 #mainContainer {
     width: 100%;
     display: grid;
+    position: relative;
     justify-content: center;
     justify-self: center;
     text-align: center;
