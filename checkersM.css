@@ -24,7 +24,6 @@ body {
 
 
 #mainContainer {
-    position: relative;
     width: 100%;
     display: grid;
     justify-content: center;
@@ -36,10 +35,11 @@ body {
 
 #gameContainer {
     display: grid;
+    position: relative;
     justify-content: center;
+    justify-items: center;
     justify-self: center;
     align-content: center;
-    position: relative;
     text-align: center;
     width: 100%;
 }
@@ -51,7 +51,6 @@ body {
     margin: 10px auto;
     grid-template-rows: 40px 40px 40px 40px 40px 40px 40px 40px;
     grid-template-columns: 40px 40px 40px 40px 40px 40px 40px 40px;
-    position: relative;
     box-shadow: -2px -2px 63px 10px rgba(0,0,0,0.75);
     width: fit-content;
     background-color: darkred;
@@ -66,6 +65,7 @@ body {
 .gridSpot {
     display: grid;
     border: 1px solid black;
+    position: relative;
     width: 40px;
     height: 40px;
     font-size: 20px;
@@ -116,7 +116,6 @@ body {
 .checkerPiece {
     display: grid;
     padding: 0px;
-    position: relative;
     border: 4px double white;
     border-radius: 50%;
     box-sizing: border-box;
@@ -137,7 +136,6 @@ body {
     width: 35px;
     height: 35px;
     padding: 0px;
-    position: relative;
     border: 4px double white;
     border-radius: 50%;
     box-sizing: border-box;
@@ -172,6 +170,7 @@ body {
     position: relative;
     text-align: center;
     justify-content: center;
+    justify-items: center;
     margin: 0 auto;
     background-color: #00A856;
     width: 340px;
@@ -234,18 +233,6 @@ body {
     cursor: pointer;
 }
 
-
-#errorMessage, #requestMessage {
-    position: absolute;
-    text-align: center;
-    justify-content: center;
-    justify-self: center;
-    align-self: center;
-    box-sizing: border-box;
-    margin: 0 auto;
-
-}
-
 .errorMessage, .requestMessage {
     position: absolute;
     text-align: center;
@@ -276,7 +263,6 @@ body {
     width: fit-content;
     height: fit-content;
     margin: 5px auto;
-    position: relative;
     border-radius: 10px;
     cursor: pointer;
 }
@@ -303,7 +289,6 @@ body {
 
 #playersOnline {
     display: inline-block;
-    position: relative;
     padding: 0px;
     justify-items: center;
     text-align: center;
@@ -335,7 +320,7 @@ body {
 .dropdownContent a {
     display: block;
     color: black;
-    padding: 4px;
+    padding: 5px;
     text-decoration: none;
     border: 1px solid black;
     text-align: center;
@@ -365,7 +350,6 @@ button:hover {
     padding: 0px;
     color: white;
     text-align: center;
-    position: relative;
     z-index: 1000;
 }
 
