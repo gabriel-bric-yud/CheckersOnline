@@ -1,86 +1,3 @@
-let selection
-let gameBoard = []
-const squareSize = '40px'
-const pieceSize = '30px'
-
-const darkSquare = 'indigo' //'transparent'//'black'//'darkolivegreen' //'indigo'
-const lightSquare = 'lightgrey' //'transparent'//'lightgoldenrodyellow'//'lightgoldenrodyellow' //'lightgrey'
-
-const alphabet = ['A', 'B', 'C', 'D','E','F','G','H']
-
-let pieces = []
-let boardSpots = []
-let boardSpotsDark = []
-
-let whitePieces = []
-let blackPieces = []
-let pieceId
-
-let nextMove
-let movedPiece
-let droppedSpot
-
-let alphabetCounter
-let numberCounter
-
-let currentPiece
-
-let backRight = ''
-let backLeft = ''
-let forwardRight = ''
-let forwardLeft = ''
-
-let takenPieceForwR = ''
-let takenPieceForwL = ''
-let takenPieceBackR = ''
-let takenPieceBackL = ''
-
-
-let takenPiece1 = ''
-let takenPiece2 = ''
-
-let forceBool1 = false
-let forceBool2 = false
-let forceBool3 = false
-let forceBool4 = false
-
-let jumpBool = false
-
-
-let playerTurn = ''
-let playerColor
-let single
-let matchRoom
-
-let clickSelection
-
-const darkTexture = new Image()
-darkTexture.src = '/imgs/darkwood texture.jpg'
-
-const lightTexture = new Image()
-lightTexture.src = '/imgs/lightwood texture.jpg'
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-window.addEventListener('selectstart', (e) => {
-    e.preventDefault();
-    
-})
-
-/** 
-window.addEventListener('touchmove', (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    
-},{passive:false});
-*/
-
-let socket
-let user
-let possibleFriend
-let friend
-
 const titleDiv = document.querySelector('.titleDiv')
 const gameContainer = document.getElementById('gameContainer')
 const boardContainer = document.getElementById('boardContainer');
@@ -103,18 +20,78 @@ const searchFriendForm = document.getElementById('searchFriendForm');
 const searchFriendDiv = document.getElementById('searchFriendDiv');
 const friendName = document.getElementById('friend')
 
-
-const winnerText = document.getElementById('winnerText')
-const winnerDiv = document.querySelector('#winnerBoard')
 const restartText = document.querySelector('#restart')
 const acceptRematch = document.getElementById('accept');
 const rejectRematch = document.getElementById('reject');
-
-
-//const waitButton = document.getElementById('wait')
-
 const playersOnline = document.getElementById('playersOnline')
+const winnerText = document.getElementById('winnerText')
+const winnerDiv = document.querySelector('#winnerBoard')
 
+const darkTexture = new Image()
+darkTexture.src = '/imgs/darkwood texture.jpg'
+const lightTexture = new Image()
+lightTexture.src = '/imgs/lightwood texture.jpg'
+const squareSize = '40px'
+const pieceSize = '30px'
+const darkColor = 'indigo' //'transparent'//'black'//'darkolivegreen' //'indigo'
+const lightColor = 'lightgrey' //'transparent'//'lightgoldenrodyellow'//'lightgoldenrodyellow' //'lightgrey'
+const alphabet = ['A', 'B', 'C', 'D','E','F','G','H']
+
+
+
+let selection
+let gameBoard = []
+let pieces = []
+let boardSpots = []
+let boardSpotsDark = []
+let whitePieces = []
+let blackPieces = []
+let pieceId
+
+let nextMove
+let movedPiece
+let droppedSpot
+
+let alphabetCounter
+let numberCounter
+
+let currentPiece
+
+let backRight = ''
+let backLeft = ''
+let forwardRight = ''
+let forwardLeft = ''
+let takenPieceForwR = ''
+let takenPieceForwL = ''
+let takenPieceBackR = ''
+let takenPieceBackL = ''
+let takenPiece1 = ''
+let takenPiece2 = ''
+let forceBool1 = false
+let forceBool2 = false
+let forceBool3 = false
+let forceBool4 = false
+let jumpBool = false
+
+let playerTurn = ''
+let playerColor
+let single
+let matchRoom
+
+let clickSelection
+let socket
+let user
+let possibleFriend
+let friend
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+window.addEventListener('selectstart', (e) => {
+    e.preventDefault();
+    
+})
 
 
 acceptRematch.addEventListener('click', (e) => {
@@ -257,24 +234,6 @@ function sendInvite() {
     searchNewFriend(clickSelection)
 }
 
-/** 
-function acceptRematch() {
-    if (single == false) {socket.emit('accept rematch', [friend, user, playerColor])}
-    startGame(playerColor)
-
-}
-
-function rejectRematch() {
-    clearBoard()
-    socket.emit("disconnect friend", [friend, user]);
-    friend = ""
-}
-
-waitButton.addEventListener('click', (e) => {
-    enemyDisconnected.classList.add('hide')
-})
-
-*/
 
 function createErrorNotification(msg, parent) {
     const messageDiv = document.createElement('div')
@@ -414,15 +373,10 @@ function clearBoard() {
         boardContainer.firstChild.remove()
     } 
     winnerDiv.classList.remove('show')
-
 }
 
 function startGame(msg) {
-    while (boardContainer.firstChild) {
-        boardContainer.firstChild.remove()
-    } 
-
-    winnerDiv.classList.remove('show')
+    clearBoard()
 
     if (msg == 'white') {
         createBoardWhite()
@@ -435,22 +389,11 @@ function startGame(msg) {
         gameBoard = document.querySelectorAll('.gridSpot')
         selectColor.value = ''
         addCheckerPiecesBlack() 
-        
     }
     highlight()
     dragDrop()
     newTurn()
 }
-
-
-
-
-
-function myFunction(elem) {
-        elem.style.webkitAnimation = "mynewmove 3s 1"
-}
-
-
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -536,16 +479,16 @@ class checker {
 
 
 function createDarkBoardSpots(gridSpot) {
-    gridSpot.style.backgroundColor = darkSquare
-    gridSpot.originalColor = darkSquare
+    gridSpot.style.backgroundColor = darkColor
+    gridSpot.originalColor = darkColor
     gridSpot.classList.add('darkSquare')
     gridSpot.style.color = 'white'
     gridSpot.originalTextColor = 'white'
 }
 
 function createLightBoardSpots(gridSpot) {
-    gridSpot.style.backgroundColor = lightSquare
-    gridSpot.originalColor = lightSquare
+    gridSpot.style.backgroundColor = lightColor
+    gridSpot.originalColor = lightColor
     gridSpot.classList.add('lightSquare') 
     gridSpot.originalTextColor = 'black'
 }
@@ -711,59 +654,31 @@ function addCheckerPiecesBlack() {
 
 
 function checkAllForceBool() {
-    if (forceBool1 === true || forceBool2 === true || forceBool3 === true || forceBool4 === true) {
-        return true
-    }
-    else {
-        return false
-    }
+    return (forceBool1 || forceBool2 || forceBool3 || forceBool4);
 }
 
 function checkAllForceData(piece) {
-    let forceData
     for (let i = 1; i <= 4; i++) {
         if (piece.dataset[`forceMove${i}`] == 'true') {
-            forceData = true
+            return true;
         }
     }
-    if (forceData === true) {
-        return true
-    }
-    else {
-        return false
-    }
 }
-
 
 
 
 function checkOccupied(element) {
     if (checkNull(element) === false) {
-        if (element.classList.contains('occupied')) {
-            return true
-        }
-        else {
-            return false
-        }
+        return element.classList.contains('occupied');
     }   
 }
 
 function checkNull(element) {
-    if (element == null || typeof element === 'undefined') {
-        return true
-    }
-    else {
-        return false
-    }
+    return (element == null || typeof element === 'undefined');
 }
 
 function checkSameSide(piece, takenPiece) {
-    if (takenPiece.lastChild.dataset.side === piece.dataset.side) {
-        return true
-    }
-    else {
-        return false
-    }
+    return (takenPiece.lastChild.dataset.side === piece.dataset.side);
 }
 
 
@@ -1117,7 +1032,6 @@ function createPossibleMove(move) {
             move.appendChild(possibleMove) 
         }
     }
-
 }
 
 function removePossibleMoves() {
@@ -1255,14 +1169,11 @@ function possibleMovesPointers(foo) {
 
 function highlight() {
     pieces.forEach(element => {
-        let clicked
         element.setAttribute('tabindex', '0')
 
         element.addEventListener('blur', (e) => {
-            //e.stopPropagation()
             if (element.dataset.side == playerTurn) {
                 resetPieceColor(element)
-                clicked = false
             }
         })
 
@@ -1270,7 +1181,6 @@ function highlight() {
 
             if (element.dataset.side == playerTurn && playerColor == playerTurn ) {
                 if (checkAllForceBool() === false) {
-                    clicked = true
                     selection = e.target
                     highlightPiece(selection)
                     currentPiece = selection
@@ -1309,7 +1219,6 @@ function highlight() {
                 }
                 else if (checkAllForceBool()) {
                     if (checkAllForceData(e.target)) {
-                        clicked = true
                         selection = e.target
                         highlightPiece(selection)
                         currentPiece = selection
@@ -1376,14 +1285,11 @@ function highlight() {
 function dragDrop() {
     let dragTarget
     let dropTarget1
-    let originalSquare
-
 
     pieces.forEach(piece => {
 
         piece.addEventListener('dragstart', (e) => {
             dragTarget = e.target
-            originalSquare = dragTarget.parentNode
             if (piece.dataset.side == playerTurn) {
                 if (checkAllForceBool() === false) {
                     dragTarget.style.boxShadow = 'none'
@@ -1508,9 +1414,4 @@ function finishGame() {
     }
 }
 
-/** 
-Online Chat Page
 
-Built with Node.js, Express, Socket.IO and MongoDB Atlas 
-
-Try here: https://chatv2.azurewebsites.net/ */
