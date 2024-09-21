@@ -49,8 +49,11 @@ input {
 
 .titleDiv a {
     margin: 0 auto;
-    font-family: 'Bungee Spice', cursive;
     font-size: 1.9em ;
+    font-family: "Tektur";
+    color: orange;
+    font-weight: bolder;
+    text-decoration: none;
 }
 
 #gameContainer {
@@ -415,3 +418,10 @@ button:hover {
     to {top: 400px;}
 }
 
+
+@media (min-width: 749px) {
+    .titleDiv a {
+        font-family: 'Bungee Spice', cursive;
+        font-size: 3em;
+    }
+}
